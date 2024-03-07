@@ -11,6 +11,9 @@ import com.example.lab9.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
+
+// Tydzień 1, Wzorzec Fabryka 4/4
 @Component
 public class DtoFactoryImpl implements DtoFactory {
 
@@ -23,7 +26,6 @@ public class DtoFactoryImpl implements DtoFactory {
         postDto.setLikes(post.getLikes());
         postDto.setAddedDate(post.getAddedDate());
         postDto.setTitle(post.getTitle());
-//        postDto.setImageUrl(post.getUser().getImageUrl());
         return postDto;
     }
 
@@ -40,7 +42,7 @@ public class DtoFactoryImpl implements DtoFactory {
         commentDto.setLikes(comment.getLikes());
         commentDto.setAddedDate(comment.getAddedDate());
         commentDto.setPostId(comment.getPost().getId());
-//        commentDto.setImageUrl(commentDto.getUser().);
         return commentDto;
     }
 }
+// Tydzień 1, Wzorzec Fabryka 4/4 KONIEC
