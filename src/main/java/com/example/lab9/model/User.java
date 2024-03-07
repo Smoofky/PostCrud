@@ -28,16 +28,27 @@ public class User implements Cloneable{
     
      @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
-
+     
+     /* ----- Start
+     TYDZIEN  II 
+     Stosowanie konstrukcyjnych wzorców projektowych
+     PROTOTYP
+     
+     Klasa implementuje Cloneable - powoduje to, że zostaje
+     utworzony klon bazowy obiektu User, który można modyfikować,
+     np. przy dodawaniu użytkownika do bazy (rejestracja).
+     */
      @Override
     public User clone() throws CloneNotSupportedException {
         User clonedUser = (User) super.clone();
-        // Przeprowadź płytkie lub głębokie klonowanie
-        // Na przykład, poniżej używamy płytkiego klonowania dla pola 'likes'
         clonedUser.likes = new ArrayList<>(this.likes);
         return clonedUser;
     }
-     
+     /* ---- Koniec
+     TYDZIEN  II 
+     Stosowanie konstrukcyjnych wzorców projektowych
+     PROTOTYP
+     */
      
      
     public List<Like> getLikes() {

@@ -69,26 +69,36 @@ public class JwtUserDetailsService implements UserDetailsService {
         newUser.setImageUrl(imageUrls.get(rand.nextInt(imageUrls.size())));
         return userDao.save(newUser);
     }*/
+    
+    /* ---- START
+    TYDZIEN II
+    Stosowanie konstrukcyjnych wzorców projektowych
+    Tutaj przy metodzie zapisywania użytkownika do bazy danych
+    uzywany jest klon na podstawie obiektu User.
+    
+    */
        
      public void save(UserDto userDto) {
         Random rand = new Random();
         User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(bcryptEncoder.encode(userDto.getPassword()));
-        user.setImageUrl(imageUrls.get(rand.nextInt(imageUrls.size())));
-
-        // Klony obiektu użytkownika
         User clonedUser = null;
         try {
             clonedUser = user.clone();
+            clonedUser.setUsername(userDto.getUsername());
+            clonedUser.setPassword(bcryptEncoder.encode(userDto.getPassword()));
+            clonedUser.setImageUrl(imageUrls.get(rand.nextInt(imageUrls.size())));
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
         }
-        
+
         // Zapisz sklonowanego użytkownika
         userDao.save(clonedUser);
     }
+    /* ---- KONIEC
+       TYDZIEN II
+       Stosowanie konstrukcyjnych wzorców projektowych
 
+     
+    */
     public boolean isUsernameTaken(String username) {
         return userDao.findByUsername(username) != null;
     }
