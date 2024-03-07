@@ -4,6 +4,7 @@
  */
 package com.example.lab9.controller;
 
+import com.example.lab9.Builder.PostBuilder;
 import com.example.lab9.dto.PostDto;
 import com.example.lab9.model.Post;
 import com.example.lab9.model.User;
@@ -39,15 +40,26 @@ public class PostController {
         String username = principal.getName();
         User user = userService.findByUsername(username);
 
-        // Create a Post entity from the DTO and set the user
-        Post post = new Post();
-        post.setContent(postDto.getContent());
-        post.setAuthor(user.getUsername());
-        post.setLikes(0);
-        post.setAddedDate(new Date());
-        post.setUser(user);
-        post.setTitle(postDto.getTitle());
+        /* --START
+        TEMAT II
+        Stosowanie konstrukcyjnych wzorców projektowych
+        Użycie Buildera na przykładzie postów. 
+        */
 
+             Post post = new PostBuilder()
+                    .content(postDto.getContent())
+                    .author(user.getUsername())
+                    .addedDate(new Date())
+                    .likes(0)
+                    .user(user)
+                    .title(postDto.getTitle())
+                    .build();
+        
+        /* --KONIEC
+        TEMAT II
+        Stosowanie konstrukcyjnych wzorców projektowych
+        Użycie Buildera na przykładzie postów. 
+        */
         // Save the post
         postService.savePost(post);
 
