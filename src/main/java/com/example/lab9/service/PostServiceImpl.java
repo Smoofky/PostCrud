@@ -136,6 +136,7 @@ public List<Long> getLikedPostIdsForUser(Long userId) {
     return likedPostIds;
 }
 
+    // Tydzień 1, Wzorzec Fabryka 2/4
     @Autowired
     private DtoFactory dtoFactory;
 
@@ -145,4 +146,5 @@ public List<Long> getLikedPostIdsForUser(Long userId) {
                 .map(post -> dtoFactory.createPostDto(post))
                 .collect(Collectors.toList());
     }
+    // Tydzień 1, Wzorzec Fabryka 2/4 KONIEC
 }
