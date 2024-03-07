@@ -13,9 +13,10 @@ import com.example.lab9.repository.CommentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.example.lab9.factory.DtoFactory;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -25,14 +26,6 @@ public class CommentServiceImpl implements CommentService {
     
     @Autowired
     private CommentRepository commentRepository;
-
-    @Override
-    public List<CommentDto> getCommentsByPostId(Long postId) {
-        List<Comment> comments = commentRepository.findByPostId(postId);
-        return comments.stream()
-                .map(this::convertToCommentDtoWithUserDetails)
-                .collect(Collectors.toList());
-    }
     
     
     private CommentDto convertToCommentDto(Comment comment) {
@@ -46,7 +39,6 @@ public class CommentServiceImpl implements CommentService {
         // Convert User to UserDto
         User user = comment.getUser();
                 commentDto.setImageUrl(user.getImageUrl());
-
 
         return commentDto;
     }
@@ -84,4 +76,22 @@ public class CommentServiceImpl implements CommentService {
             commentRepository.save(comment);
         }
     }
+
+    @Autowired
+    private DtoFactory dtoFactory;
+
+    @Override
+    public List<CommentDto> getCommentsByPostId(Long postId) {
+        return commentRepository.findByPostId(postId).stream()
+                .map(comment -> dtoFactory.createCommentDto(comment))
+                .collect(Collectors.toList());
+    }
+
+//    @Override
+//    public List<CommentDto> getCommentsByPostId(Long postId) {
+//        List<Comment> comments = commentRepository.findByPostId(postId);
+//        return comments.stream()
+//                .map(this::convertToCommentDtoWithUserDetails)
+//                .collect(Collectors.toList());
+//    }
 }

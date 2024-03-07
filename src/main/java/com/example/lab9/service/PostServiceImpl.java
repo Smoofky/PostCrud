@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.example.lab9.factory.DtoFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Service
@@ -58,13 +60,6 @@ public class PostServiceImpl implements PostService {
             post.getComments().add(comment);
             postRepository.save(post);
         }
-    }
-    
-    @Override
-    public List<PostDto> getAllPosts() {
-        return postRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
     }
     
     private PostDto convertToDto(Post post) {
@@ -141,4 +136,13 @@ public List<Long> getLikedPostIdsForUser(Long userId) {
     return likedPostIds;
 }
 
+    @Autowired
+    private DtoFactory dtoFactory;
+
+    @Override
+    public List<PostDto> getAllPosts() {
+        return postRepository.findAll().stream()
+                .map(post -> dtoFactory.createPostDto(post))
+                .collect(Collectors.toList());
+    }
 }
