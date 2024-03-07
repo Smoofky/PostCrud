@@ -77,6 +77,7 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    // Tydzień 1, Wzorzec Fabryka 3/4
     @Autowired
     private DtoFactory dtoFactory;
 
@@ -86,6 +87,7 @@ public class CommentServiceImpl implements CommentService {
                 .map(comment -> dtoFactory.createCommentDto(comment))
                 .collect(Collectors.toList());
     }
+    // Tydzień 1, Wzorzec Fabryka 3/4 KONIEC
 
 //    @Override
 //    public List<CommentDto> getCommentsByPostId(Long postId) {
