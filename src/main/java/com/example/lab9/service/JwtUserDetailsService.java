@@ -61,13 +61,32 @@ public class JwtUserDetailsService implements UserDetailsService {
                 user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 
-    public User save(UserDto user) {
+    /*public User save(UserDto user) {
         Random rand = new Random();
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
         newUser.setImageUrl(imageUrls.get(rand.nextInt(imageUrls.size())));
         return userDao.save(newUser);
+    }*/
+       
+     public void save(UserDto userDto) {
+        Random rand = new Random();
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setPassword(bcryptEncoder.encode(userDto.getPassword()));
+        user.setImageUrl(imageUrls.get(rand.nextInt(imageUrls.size())));
+
+        // Klony obiektu użytkownika
+        User clonedUser = null;
+        try {
+            clonedUser = user.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        
+        // Zapisz sklonowanego użytkownika
+        userDao.save(clonedUser);
     }
 
     public boolean isUsernameTaken(String username) {

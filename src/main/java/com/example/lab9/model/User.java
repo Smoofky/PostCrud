@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Cloneable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +29,17 @@ public class User {
      @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
+     @Override
+    public User clone() throws CloneNotSupportedException {
+        User clonedUser = (User) super.clone();
+        // Przeprowadź płytkie lub głębokie klonowanie
+        // Na przykład, poniżej używamy płytkiego klonowania dla pola 'likes'
+        clonedUser.likes = new ArrayList<>(this.likes);
+        return clonedUser;
+    }
+     
+     
+     
     public List<Like> getLikes() {
         return likes;
     }
