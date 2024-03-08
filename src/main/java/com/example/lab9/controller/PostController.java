@@ -4,7 +4,6 @@
  */
 package com.example.lab9.controller;
 
-import com.example.lab9.Builder.PostBuilder;
 import com.example.lab9.dto.PostDto;
 import com.example.lab9.model.Post;
 import com.example.lab9.model.User;
@@ -46,14 +45,9 @@ public class PostController {
         Użycie Buildera na przykładzie postów. 
         */
 
-             Post post = new PostBuilder()
-                    .content(postDto.getContent())
-                    .author(user.getUsername())
-                    .addedDate(new Date())
-                    .likes(0)
-                    .user(user)
-                    .title(postDto.getTitle())
-                    .build();
+        Post post = new Post.PostBuilder(postDto.getContent(), postDto.getTitle(), username, new Date(), 0, user)
+                .removalDate() // Optionally set the removal date 15 days ahead
+                .build();
         
         /* --KONIEC
         TEMAT II

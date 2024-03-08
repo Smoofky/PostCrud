@@ -1,17 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.lab9.model;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "post")
-public class Post  {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,18 +21,10 @@ public class Post  {
     private String author;
     private Date addedDate;
     private int likes;
-    
-    
+    private Date removalDate;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> like = new ArrayList<>();
-
-    public List<Like> getLike() {
-        return like;
-    }
-
-    public void setLike(List<Like> like) {
-        this.like = like;
-    }
+    private List<Like> likesList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -43,14 +32,6 @@ public class Post  {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String tittle) {
-        this.title = tittle;
-    }
 
     public Long getId() {
         return id;
@@ -66,6 +47,14 @@ public class Post  {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAuthor() {
@@ -92,6 +81,22 @@ public class Post  {
         this.likes = likes;
     }
 
+    public Date getRemovalDate() {
+        return removalDate;
+    }
+
+    public void setRemovalDate(Date removalDate) {
+        this.removalDate = removalDate;
+    }
+
+    public List<Like> getLikesList() {
+        return likesList;
+    }
+
+    public void setLikesList(List<Like> likesList) {
+        this.likesList = likesList;
+    }
+
     public User getUser() {
         return user;
     }
@@ -108,4 +113,82 @@ public class Post  {
         this.comments = comments;
     }
 
+    // Private constructor to be used only by the builder
+    private Post(PostBuilder builder) {
+        this.content = builder.content;
+        this.title = builder.title;
+        this.author = builder.author;
+        this.addedDate = builder.addedDate;
+        this.likes = builder.likes;
+        this.user = builder.user;
+        this.removalDate = builder.removalDate;
+    }
+
+    public static class PostBuilder {
+        private String content;
+        private String title;
+        private String author;
+        private Date addedDate;
+        private int likes;
+        private User user;
+        private Date removalDate;
+
+        public PostBuilder(String content, String title, String author, Date addedDate, int likes, User user) {
+            this.content = content;
+            this.title = title;
+            this.author = author;
+            this.addedDate = addedDate;
+            this.likes = likes;
+            this.user = user;
+        }
+
+        public PostBuilder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public PostBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public PostBuilder author(String author) {
+            this.author = author;
+            return this;
+        }
+
+        public PostBuilder addedDate(Date addedDate) {
+            this.addedDate = addedDate;
+            return this;
+        }
+
+        public PostBuilder likes(int likes) {
+            this.likes = likes;
+            return this;
+        }
+
+        public PostBuilder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        // Method to set removal date 15 days ahead of added date
+        public PostBuilder removalDate(Date removalDate) {
+            this.removalDate = removalDate;
+            return this;
+        }
+
+        // Method to set removal date 15 days ahead of added date by default
+        public PostBuilder removalDate() {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(this.addedDate);
+            calendar.add(Calendar.DAY_OF_MONTH, 15);
+            this.removalDate = calendar.getTime();
+            return this;
+        }
+
+        public Post build() {
+            return new Post(this);
+        }
+    }
 }
