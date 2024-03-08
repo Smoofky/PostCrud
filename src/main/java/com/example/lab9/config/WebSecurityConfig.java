@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.lab9.config;
 
+import com.example.lab9.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,48 +21,56 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
+    
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    @Autowired
-    private UserDetailsService jwtUserDetailsService;
+    
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
-
+    
+    private JwtUserDetailsService jwtUserDetailsService; // Deklaracja zmiennej dla instancji JwtUserDetailsService
+    
+    @Autowired
+    private AuthenticationConfiguration authenticationConfiguration;
+    
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)
-            throws Exception {
-        // Konfiguracja menadżera AuthenticationManager tak, aby 
-        // wiedział skąd załadowad użytkownika w celu dopasowania 
-        // danych uwierzytelniających
-        // Zastosowano haszowanie hasła za pomocą BCryptPasswordEncoder
-        auth.userDetailsService(jwtUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(jwtUserDetailsService()).passwordEncoder(passwordEncoder());
     }
-
+    
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/authenticate", "/register", "/login").permitAll()
-                .anyRequest().authenticated()
-                
-                )
+                .anyRequest().authenticated())
                 .exceptionHandling(auth -> auth.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        // Dodanie filtra do walidacji tokena przy każdym żądaniu
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-
     }
-
+    
+    //Tydzień 2, Stosowanie konstrukcyjnych wzorców projektowych, Wzorzec Singleton
+    //W tym kodzie zastosowano technikę Singleton poprzez leniwą inicjalizację (Lazy Initialization) 
+    //z synchronizacją za pomocą metody getInstance().
+    
+    
+    // Metoda inicjalizująca pole jwtUserDetailsService
+    private JwtUserDetailsService jwtUserDetailsService() {
+        if (jwtUserDetailsService == null) { // czy instancja już istnieje
+            jwtUserDetailsService = JwtUserDetailsService.getInstance(); // Uzyskanie instancji JwtUserDetailsService przez getInstance()
+        }
+        return jwtUserDetailsService; // Zwrócenie instancji JwtUserDetailsService
+    }
 }
+
+//Koniec, Tydzień 2, Wzorzec Singleton.
