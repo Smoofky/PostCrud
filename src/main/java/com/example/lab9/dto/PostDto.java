@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author rytel
  */
-public class PostDto {
+public class PostDto implements PostComponent {
 
     private Long id; // If you need to transfer the post id
     private String content;
@@ -30,9 +30,6 @@ public class PostDto {
     public void setUser(UserDto user) {
         this.user = user;
     }
-    public String getImageUrl() {
-        return imageUrl;
-    }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
@@ -50,48 +47,35 @@ public class PostDto {
         this.comments = comments;
     }
 
-    public List<CommentDto> getComments() {
-        return comments;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getContent() {
-        return content;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public int getLikes() {
-        return likes;
     }
 
     public void setLikes(int likes) {
         this.likes = likes;
     }
 
-    public Date getAddedDate() {
-        return addedDate;
-    }
-
     public void setAddedDate(Date addedDate) {
         this.addedDate = addedDate;
     }
 
+    // Tydzień 3, Decorator 2/4
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public String getContent() {
+        return this.content;
+    }
+    // Tydzień 3, Decorator KONIEC 2/4
 }
