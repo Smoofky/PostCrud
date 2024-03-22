@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface CommentService {
     List<CommentDto> getCommentsByPostId(Long postId);
-    void saveComment(Comment comment);
+    void saveComment(CommentDto commentDto);
 
     public void deleteComment(Long commentId);
 
-    public Comment getCommentById(Long commentId);
+    public CommentDto getCommentById(Long commentId);
 
     public void editComment(Long commentId, String editedContent);
 }

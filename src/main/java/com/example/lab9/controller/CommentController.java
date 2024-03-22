@@ -68,7 +68,7 @@ public class CommentController {
 
     @PostMapping("/deleteComment/{commentId}")
     public String deleteComment(@PathVariable Long commentId, Principal principal, RedirectAttributes redirectAttributes) {
-        Comment comment = commentService.getCommentById(commentId);
+        CommentDto comment = commentService.getCommentById(commentId);
 
         if (comment != null) {
             User loggedInUser = userService.findByUsername(principal.getName());
@@ -90,7 +90,7 @@ public class CommentController {
 
     @GetMapping("/editComment/{commentId}")
     public String showEditCommentPage(@PathVariable Long commentId, Model model) {
-        Comment comment = commentService.getCommentById(commentId);
+        CommentDto comment = commentService.getCommentById(commentId);
         if (comment == null) {
             model.addAttribute("errorMessage", "Comment not found");
             return "hello"; // Or whatever your error page is
@@ -103,7 +103,7 @@ public class CommentController {
 
     @PostMapping("/editComment/{commentId}")
     public String editComment(@PathVariable Long commentId, @RequestParam String content, Model model, RedirectAttributes redirectAttributes) {
-        Comment comment = commentService.getCommentById(commentId);
+        CommentDto comment = commentService.getCommentById(commentId);
         if (comment == null) {
             model.addAttribute("errorMessage", "Comment not found");
             return "hello"; // Or whatever your error page is

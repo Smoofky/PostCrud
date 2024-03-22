@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.lab9.service;
-
+import com.example.lab9.adapter.CommentAdapter; // Adapter modifikacja
 import com.example.lab9.dto.CommentDto;
 import com.example.lab9.dto.UserDto;
 import com.example.lab9.model.Comment;
@@ -30,12 +30,11 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDto> getCommentsByPostId(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
         return comments.stream()
-                .map(this::convertToCommentDtoWithUserDetails)
+                .map(CommentAdapter::commentToDto)  // Adapter modifikacja
                 .collect(Collectors.toList());
     }
     
-    
-    private CommentDto convertToCommentDto(Comment comment) {
+     public static CommentDto commentToDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
         commentDto.setContent(comment.getContent());
@@ -43,24 +42,19 @@ public class CommentServiceImpl implements CommentService {
         commentDto.setPostId(comment.getPost().getId());
         commentDto.setLikes(comment.getLikes());
         commentDto.setAddedDate(comment.getAddedDate());
-        // Convert User to UserDto
+
         User user = comment.getUser();
-                commentDto.setImageUrl(user.getImageUrl());
-
-
-        return commentDto;
-    }
-    
-    private CommentDto convertToCommentDtoWithUserDetails(Comment comment) {
-        CommentDto commentDto = convertToCommentDto(comment);
-        // Fetch user details including imageUrl
-        UserDto userDto = userService.getUserById(comment.getUser().getId());
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setImageUrl(user.getImageUrl()); 
         commentDto.setUser(userDto);
         return commentDto;
-    }
-
+    } 
     @Override
-    public void saveComment(Comment comment) {
+    public void saveComment(CommentDto commentDto) {
+        Comment comment = new Comment();
+        comment.setContent(commentDto.getContent());
+        comment.setAuthor(commentDto.getAuthor());
         commentRepository.save(comment);
     }
 
@@ -71,9 +65,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment getCommentById(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElse(null);
+    public CommentDto getCommentById(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElse(null); // Adapter modifikacja
+        return comment != null ? CommentAdapter.commentToDto(comment) : null; // Adapter modifikacja
     }
 
     @Override

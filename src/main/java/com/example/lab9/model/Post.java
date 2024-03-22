@@ -123,6 +123,8 @@ public class Post {
         this.user = builder.user;
         this.removalDate = builder.removalDate;
     }
+    public Post(){
+    }
 
     public static class PostBuilder {
         private String content;

@@ -7,6 +7,7 @@ package com.example.lab9.controller;
 import com.example.lab9.dto.PostDto;
 import com.example.lab9.model.Post;
 import com.example.lab9.model.User;
+import com.example.lab9.service.PostBridge;
 import com.example.lab9.service.PostService;
 import com.example.lab9.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

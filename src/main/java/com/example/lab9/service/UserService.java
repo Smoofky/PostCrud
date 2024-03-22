@@ -23,6 +23,6 @@ public interface UserService {
     
     public long countPostsByUsername(String username);
     public long countCommentsByUsername(String username);
-        public long countLikesByUsername(String username);
+    public long countLikesByUsername(String username);
 
 }

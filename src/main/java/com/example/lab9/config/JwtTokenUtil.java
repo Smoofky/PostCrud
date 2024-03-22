@@ -58,19 +58,21 @@ public class JwtTokenUtil implements Serializable {
     return false;
     }
     
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(String userName, SignatureAlgorithm algorithm) {
     Map<String, Object> claims = new HashMap<>();
-    return doGenerateToken(claims, userDetails.getUsername());
+    System.out.println(algorithm);
+    return doGenerateToken(claims, userName, algorithm);
     }
     
     private String doGenerateToken(Map<String, Object> claims,
-    String subject) {
+    String subject, SignatureAlgorithm algorithm) {
+        
     return Jwts.builder().setClaims(claims)
-    .setSubject(subject)
-    .setIssuedAt( new Date(System.currentTimeMillis()))
-    .setExpiration(new Date(
-    System.currentTimeMillis()+JWT_TOKEN_VALIDITY*1000))
-    .signWith(SignatureAlgorithm.HS512, secret).compact();
+        .setSubject(subject)
+        .setIssuedAt( new Date(System.currentTimeMillis()))
+        .setExpiration(new Date(
+        System.currentTimeMillis()+JWT_TOKEN_VALIDITY*1000))
+        .signWith(algorithm, secret).compact();
     }
     
     public Boolean canTokenBeRefreshed(String token) {

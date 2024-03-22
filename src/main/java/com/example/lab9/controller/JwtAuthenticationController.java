@@ -4,7 +4,8 @@
  */
 package com.example.lab9.controller;
 
-import com.example.lab9.config.JwtTokenUtil;
+import com.example.lab9.adapter.TokenGeneratorAdapterImpl;
+import com.example.lab9.config.TokenGeneratorAdapter;
 import com.example.lab9.dto.UserDto;
 import com.example.lab9.service.JwtUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,8 +31,12 @@ public class JwtAuthenticationController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    
+    // start adapter
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private TokenGeneratorAdapterImpl tokenGenerator;
+    // end adapter
+    
     @Autowired
     private JwtUserDetailsService userDetailsService;
     @Autowired
@@ -43,9 +48,11 @@ public class JwtAuthenticationController {
             RedirectAttributes redirectAttributes, Model model) {
         try {
             if (authenticate(user.getUsername(), user.getPassword())) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-                String token = jwtTokenUtil.generateToken(userDetails);
-
+               
+                // start, adapter 
+                String token = tokenGenerator.generateToken(user.getUsername(), "SHA512");
+                // end
+                
                 // Zapisz token w sesji
                 HttpSession session = request.getSession();
                 session.setAttribute("token", token);
