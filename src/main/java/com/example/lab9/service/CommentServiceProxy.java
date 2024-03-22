@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+//TYDZIEN 4, PORXY 1/1 START
 @Service
 @Primary
 public class CommentServiceProxy implements CommentService {
@@ -49,3 +50,4 @@ public class CommentServiceProxy implements CommentService {
         commentService.editComment(commentId, editedContent);
     }
 }
+//TYDZIEN 4, PORXY 1/1 KONIEC
